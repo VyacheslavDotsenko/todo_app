@@ -5,8 +5,24 @@
     <title>Title</title>
 </head>
 <body>
+{% if request.user.is_authenticated %}
+<p>{{ request.user }}</p>
+<form method="POST" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">logout</button>
+</form>
+{% else %}
+<a href="{% url 'login' %}">Login</a>
+{% endif %}
+
+<hr>
 <h1>My To-do list</h1>
 <a href="{% url 'task-create' %}">Add task</a>
+
+<form method="GET">
+    <input type="text" name="search-area" value="{{ search_input }}">
+    <input type="submit" value="search">
+</form>
 <table>
     <tr>
         <th>Items</th>
@@ -17,6 +33,7 @@
         <td>{{task.title}}</td>
         <td><a href="{% url 'task' task.id %}">View task</a></td>
         <td><a href="{% url 'task-update' task.id %}">Edit task</a></td>
+        <td><a href="{% url 'task-delete' task.id %}">Delete task</a></td>
     </tr>
     {% empty %}
     <h3>No items in list</h3>
