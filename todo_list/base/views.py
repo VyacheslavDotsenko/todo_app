@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.views.generic.list import ListView
-from base.models import Task
+from .models import Task
 
 
 # Create your views here.
@@ -44,7 +44,7 @@ class TaskList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tasks'] = context['tasks'].filter(user=self.request.user)
+        context['tasks'] = context['tasks'].filter(user=self.request.user).order_by('-created')
         context['count'] = context['tasks'].filter(complete=False).count()
 
         search_input = self.request.GET.get('search-area') or ''
